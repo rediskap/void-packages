@@ -1,0 +1,35 @@
+# void-packages/srcpkgs/openpref/template
+
+pkgname=openpref
+version=1.0.0
+revision=1
+hostmakedepends=
+makedepends="qt5"  # используем системные Qt5 библиотеки
+short_desc="Openpref packaged for Void Linux using system libraries"
+license=custom
+homepage="https://example.com/openpref"
+
+do_unpack() {
+    # копируем распакованный AppImage из каталога пакета в рабочую директорию masterdir
+    cp -r "${XBPS_PKGSRCDIR}/openpref/squashfs-root" .
+
+    # проверяем, что бинарник реально существует
+    if [ ! -f squashfs-root/usr/bin/openpref ]; then
+        echo "ERROR: Binary 'openpref' not found!"
+        ls -l squashfs-root/usr/bin
+        exit 1
+    fi
+}
+
+
+
+do_build() {
+    # сборка не требуется
+    return 0
+}
+
+do_install() {
+    
+    # создаём симлинк для удобного запуска
+    ln -sf /usr/bin/openpref ${DESTDIR}/usr/bin/openpref
+}
